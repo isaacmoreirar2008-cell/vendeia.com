@@ -362,7 +362,29 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
             margin-top: 50px;
-        }
+       
+     }
+        
+        <div class="plan-card">
+    <h3>Starter</h3>
+    <div class="price">R$ 49</div>
+    <p>Para começar</p>
+    <a href="#" onclick="redirectToCheckout('starter')" class="btn-plan">COMEÇAR</a>
+</div>
+<div class="plan-card featured">
+    <h3>Pro</h3>
+    <div class="price">R$ 99</div>
+    <p>Mais escolhido</p>
+    <a href="#" onclick="redirectToCheckout('pro')" class="btn-plan">COMEÇAR</a>
+</div>
+<div class="plan-card">
+    <h3>Turbo</h3>
+    <div class="price">R$ 199</div>
+    <p>Máximo desempenho</p>
+    <a href="#" onclick="redirectToCheckout('turbo')" class="btn-plan">COMEÇAR</a>
+</div>
+        
+        
         .benefit-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -1142,7 +1164,6 @@
 
     <script src="auth.js"></script>
     
-</body>
 </html>
 function redirectToCheckout(plan) {
     const user = localStorage.getItem('vendeiaUser');
@@ -1159,5 +1180,20 @@ function redirectToCheckout(plan) {
     };
     window.location.href = links[plan];
 }
-
+<script>
+function redirectToCheckout(plan) {
+    const user = localStorage.getItem('vendeiaUser');
+    if (!user) {
+        window.location.href = 'auth.html?plan=' + plan;
+        return;
+    }
+    const links = {
+        starter: 'https://buy.stripe.com/test_9B6aEW1MI1pqfgy1poaMU00',
+        pro: 'https://buy.stripe.com/test_3cIfZg7721pq9We5FEaMU01',
+        turbo: 'https://buy.stripe.com/test_5kQfZg1MI6JK3xQ0lkaMU02'
+    };
+    window.location.href = links[plan];
+}
+</script>
+</body> 
 
