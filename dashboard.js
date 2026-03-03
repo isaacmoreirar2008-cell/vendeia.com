@@ -8,9 +8,14 @@ if (!userData) {
     const user = JSON.parse(userData);
 
     // Preenche informações fixas (sidebar, cabeçalho)
-    document.getElementById('userName').innerText = user.nomeCompleto || 'Usuário';
-    document.getElementById('userPlan').innerText = user.plano ? user.plano.charAt(0).toUpperCase() + user.plano.slice(1) : 'Starter';
-    document.getElementById('companyName').innerText = user.empresa || '';
+    const userNameSpan = document.getElementById('userName');
+    if (userNameSpan) userNameSpan.innerText = user.nomeCompleto || 'Usuário';
+    
+    const userPlanSpan = document.getElementById('userPlan');
+    if (userPlanSpan) userPlanSpan.innerText = user.plano ? user.plano.charAt(0).toUpperCase() + user.plano.slice(1) : 'Starter';
+    
+    const companyNameSpan = document.getElementById('companyName');
+    if (companyNameSpan) companyNameSpan.innerText = user.empresa || '';
 }
 
 // Elemento onde o conteúdo será injetado
@@ -112,86 +117,117 @@ function renderConfiguracoes() {
 // Função para alternar abas e atualizar classe active
 function setActiveLink(linkId) {
     document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-    document.getElementById(linkId).classList.add('active');
+    const link = document.getElementById(linkId);
+    if (link) link.classList.add('active');
 }
 
-// Configurar event listeners para os links da sidebar
-document.getElementById('linkDashboard').addEventListener('click', (e) => {
-    e.preventDefault();
-    setActiveLink('linkDashboard');
-    renderDashboard();
-});
+// Configurar event listeners para os links da sidebar (apenas se existirem)
+const linkDashboard = document.getElementById('linkDashboard');
+if (linkDashboard) {
+    linkDashboard.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveLink('linkDashboard');
+        renderDashboard();
+    });
+}
 
-document.getElementById('linkMarketing').addEventListener('click', (e) => {
-    e.preventDefault();
-    setActiveLink('linkMarketing');
-    renderMarketingIA();
-});
+const linkMarketing = document.getElementById('linkMarketing');
+if (linkMarketing) {
+    linkMarketing.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveLink('linkMarketing');
+        renderMarketingIA();
+    });
+}
 
-document.getElementById('linkPromocoes').addEventListener('click', (e) => {
-    e.preventDefault();
-    setActiveLink('linkPromocoes');
-    renderPromocoes();
-});
+const linkPromocoes = document.getElementById('linkPromocoes');
+if (linkPromocoes) {
+    linkPromocoes.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveLink('linkPromocoes');
+        renderPromocoes();
+    });
+}
 
-document.getElementById('linkConfig').addEventListener('click', (e) => {
-    e.preventDefault();
-    setActiveLink('linkConfig');
-    renderConfiguracoes();
-});
+const linkConfig = document.getElementById('linkConfig');
+if (linkConfig) {
+    linkConfig.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveLink('linkConfig');
+        renderConfiguracoes();
+    });
+}
 
 // Logout
-document.getElementById('logoutBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    window.location.href = 'auth.html';
-});
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'auth.html';
+    });
+}
 
 // Carregar dashboard inicial ao abrir a página
 renderDashboard();
 
-// ===== PARTÍCULAS E CURSOR (mantido do original) =====
-const canvas = document.getElementById('particles-canvas');
-if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let width, height, particles = [];
-    function initParticles() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-        particles = [];
-        for (let i = 0; i < 50; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                size: Math.random() * 3 + 1,
-                speedX: (Math.random() - 0.5) * 0.3,
-                speedY: (Math.random() - 0.5) * 0.3,
-                color: `rgba(25, 195, 125, ${Math.random() * 0.3})`
-            });
-        }
-    }
-    function animateParticles() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.fill();
-            p.x += p.speedX;
-            p.y += p.speedY;
-            if (p.x < 0 || p.x > width) p.speedX *= -1;
-            if (p.y < 0 || p.y > height) p.speedY *= -1;
+// ===== PARTÍCULAS E CURSOR (código adaptado da home) =====
+(function initEffects() {
+    // Cursor glow
+    const cursor = document.getElementById('cursor-glow');
+    if (cursor) {
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
-        requestAnimationFrame(animateParticles);
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+        });
     }
-    window.addEventListener('resize', initParticles);
-    initParticles();
-    animateParticles();
-}
 
-const cursor = document.getElementById('cursor-glow');
-document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-});
+    // Partículas
+    const canvas = document.getElementById('particles-canvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+
+        function initParticles() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            particles = [];
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 3 + 1,
+                    speedX: (Math.random() - 0.5) * 0.3,
+                    speedY: (Math.random() - 0.5) * 0.3,
+                    color: `rgba(25, 195, 125, ${Math.random() * 0.3})`
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0 || p.x > width) p.speedX *= -1;
+                if (p.y < 0 || p.y > height) p.speedY *= -1;
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', initParticles);
+        initParticles();
+        animateParticles();
+    }
+})();
