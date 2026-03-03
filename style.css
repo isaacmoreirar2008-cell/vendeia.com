@@ -898,3 +898,33 @@ h2 {
         border-bottom: 1px solid rgba(25,195,125,0.2);
     }
 }
+
+/* Botões de login/cadastro no cabeçalho */
+.nav-link.btn-cadastro {
+    background: var(--grad-primary);
+    color: white !important;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    box-shadow: 0 0 15px rgba(25,195,125,0.3);
+    transition: 0.3s;
+    margin-left: 10px;
+}
+.nav-link.btn-cadastro:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(25,195,125,0.6);
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+    padding: 8px 16px;
+    border-radius: 40px;
+}
+.nav-link:hover {
+    background: rgba(25,195,125,0.1);
+    border: 1px solid var(--verde-performance);
+}
