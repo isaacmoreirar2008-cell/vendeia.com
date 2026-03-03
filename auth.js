@@ -141,6 +141,16 @@ if (canvas) {
     animateParticles();
 }
 
+// Salvar dados do usuário (já feito)
+// Obter plano da URL (já temos)
+// Redirecionar para o link de checkout correspondente
+const checkoutLinks = {
+  starter: 'https://buy.stripe.com/test_9B6aEW1MI1pqfgy1poaMU00',
+  pro: 'https://buy.stripe.com/test_3cIfZg7721pq9We5FEaMU01',
+  turbo: 'https://buy.stripe.com/test_5kQfZg1MI6JK3xQ0lkaMU02'
+};
+window.location.href = checkoutLinks[plan];
+
 // Cursor glow
 const cursor = document.getElementById('cursor-glow');
 document.addEventListener('mousemove', (e) => {
