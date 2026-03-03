@@ -7,9 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Elementos do cursor e fundo -->
     <div class="animated-bg"></div>
     <div id="cursor-glow"></div>
     <canvas id="particles-canvas"></canvas>
@@ -39,28 +41,8 @@
                 </div>
             </header>
 
-            <div class="dashboard-content">
-                <div class="welcome-card">
-                    <h2>Informações da sua conta</h2>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Empresa</span>
-                            <span class="info-value" id="infoEmpresa"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Nicho</span>
-                            <span class="info-value" id="infoNicho"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Email</span>
-                            <span class="info-value" id="infoEmail"></span>
-                        </div>
-                    </div>
-                    <a href="#" class="btn-primary dashboard-cta">Começar a usar a IA</a>
-                    <div class="dashboard-content" id="dashboardContent">
-    <!-- O conteúdo será carregado dinamicamente pelo JavaScript -->
-</div>
-                </div>
+            <div class="dashboard-content" id="dashboardContent">
+                <!-- Conteúdo carregado dinamicamente -->
             </div>
         </main>
     </div>
