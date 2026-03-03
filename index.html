@@ -753,9 +753,9 @@
             <section id="planos" class="container">
                 <h2 class="reveal">Escolha o plano ideal</h2>
                 <div class="plans-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:30px;">
-                    <div class="plan-card glass-card"><h3>Starter</h3><div class="price">R$ 49</div><p>Para começar</p><a <a href="auth.html?plan=starter" class="btn-plan">COMEÇAR</a></div>
-                    <div class="plan-card glass-card" style="border:2px solid #19C37D;"><h3>Pro</h3><div class="price">R$ 99</div><p>Mais escolhido</p><a<a href="auth.html?plan=pro" class="btn-plan">COMEÇAR</a>></div>
-                    <div class="plan-card glass-card"><h3>Turbo</h3><div class="price">R$ 199</div><p>Máximo desempenho</p><a<a href="auth.html?plan=turbo" class="btn-plan">COMEÇAR</a></div>
+                    <div class="plan-card glass-card"><h3>Starter</h3><div class="price">R$ 49</div><p>Para começar</p><a <a href="#" onclick="redirectToCheckout('starter')" class="btn-plan">COMEÇAR</a></div>
+                    <div class="plan-card glass-card" style="border:2px solid #19C37D;"><h3>Pro</h3><div class="price">R$ 99</div><p>Mais escolhido</p><a<a href="#" onclick="redirectToCheckout('pro')" class="btn-plan">COMEÇAR</a>
+                    <div class="plan-card glass-card"><h3>Turbo</h3><div class="price">R$ 199</div><p>Máximo desempenho</p><a<a href="#" onclick="redirectToCheckout('turbo')" class="btn-plan">COMEÇAR</a>
                 </div>
             </section>
 
@@ -1136,11 +1136,28 @@
 
             <!-- Mensagem de erro -->
             <div id="authError" class="auth-error"></div>
+            
         </div>
     </div>
 
     <script src="auth.js"></script>
+    
 </body>
 </html>
+function redirectToCheckout(plan) {
+    const user = localStorage.getItem('vendeiaUser');
+    if (!user) {
+        // Não está logado, redireciona para cadastro com o plano
+        window.location.href = `auth.html?plan=${plan}`;
+        return;
+    }
+    // Se está logado, redireciona para o link do Stripe correspondente
+    const links = {
+        starter: 'https://buy.stripe.com/test_9B6aEW1MI1pqfgy1poaMU00',
+        pro: 'https://buy.stripe.com/test_3cIfZg7721pq9We5FEaMU01',
+        turbo: 'https://buy.stripe.com/test_5kQfZg1MI6JK3xQ0lkaMU02'
+    };
+    window.location.href = links[plan];
+}
 
 
