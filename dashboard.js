@@ -1,21 +1,22 @@
 // dashboard.js
 
 // Recupera dados do usuário
-const userData = localStorage.getItem('vendeiaUser');
-if (!userData) {
-    window.location.href = 'auth.html'; // redireciona se não houver
+let user = JSON.parse(localStorage.getItem('vendeiaUser'));
+if (!user) {
+    window.location.href = 'auth.html';
 } else {
-    const user = JSON.parse(userData);
+    // Verificar se veio de um checkout (parâmetro plan na URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    const planFromUrl = urlParams.get('plan');
+    if (planFromUrl) {
+        user.plano = planFromUrl;
+        localStorage.setItem('vendeiaUser', JSON.stringify(user));
+    }
 
-    // Preenche informações fixas (sidebar, cabeçalho)
-    const userNameSpan = document.getElementById('userName');
-    if (userNameSpan) userNameSpan.innerText = user.nomeCompleto || 'Usuário';
-    
-    const userPlanSpan = document.getElementById('userPlan');
-    if (userPlanSpan) userPlanSpan.innerText = user.plano ? user.plano.charAt(0).toUpperCase() + user.plano.slice(1) : 'Starter';
-    
-    const companyNameSpan = document.getElementById('companyName');
-    if (companyNameSpan) companyNameSpan.innerText = user.empresa || '';
+    // Preencher na tela
+    document.getElementById('userName').innerText = user.nomeCompleto || 'Usuário';
+    document.getElementById('userPlan').innerText = user.plano ? user.plano.charAt(0).toUpperCase() + user.plano.slice(1) : 'Starter';
+    document.getElementById('companyName').innerText = user.empresa || '';
 }
 
 // Elemento onde o conteúdo será injetado
