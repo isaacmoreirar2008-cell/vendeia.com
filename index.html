@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>VendeIA · Marketing automático com IA</title>
+    <!-- Fontes e ícones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== RESET & VARIÁVEIS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f17;
+            color: #FFFFFF;
+            line-height: 1.5;
+            overflow-x: hidden;
+            position: relative;
+        }
+        :root {
+            --azul-profundo: #1F3A5F;
+            --verde-performance: #19C37D;
+            --roxo-tech: #8B5CF6;
+            --preto-carbon: #0b0f17;
+            --branco: #FFFFFF;
+            --grad-primary: linear-gradient(135deg, #1F3A5F 0%, #19C37D 100%);
+            --grad-animado: linear-gradient(-45deg, #0F172A, #1E293B, #0ea5a4, #6366f1, #8B5CF6);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.05);
+        }
+        /* ===== FUNDO GRADIENTE ANIMADO ===== */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--grad-animado);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            opacity: 0.15;
+            z-index: -2;
+            pointer-events: none;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* ===== CURSOR GLOW ===== */
+        #cursor-glow {
+            position: fixed;
+            width: 28px;
+            height: 28px;
+            background: rgba(25, 195, 125, 0.25);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            box-shadow: 0 0 20px #19C37D, 0 0 40px #1F3A5F;
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(2px);
+        }
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--grad-primary);
+            z-index: 10000;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 15px #19C37D;
+        }
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .floating-words {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .floating-words span {
+            position: absolute;
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: rgba(25, 195, 125, 0.08);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            white-space: nowrap;
+            animation: floatWord 20s linear infinite;
+            user-select: none;
+            text-shadow: 0 0 10px rgba(25,195,125,0.2);
+        }
+        @keyframes floatWord {
+            0% { transform: translateX(100%) translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateX(-100%) translateY(-40px) rotate(5deg); opacity: 0; }
+        }
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(14, 17, 23, 0.7);
+            border-bottom: 1px solid rgba(25,195,125,0.2);
+            height: auto;
+            min-height: 70px;
+        }
+        .logo {
+            position: relative;
+            display: flex;
+            align-items: center;
+            line-height: 0;
+        }
+        .logo img {
+            height: 70px;
+            width: auto;
+            filter: drop-shadow(0 0 20px #19C37D) drop-shadow(0 0 40px #1F3A5F);
+            animation: logoGlow 3s infinite alternate;
+            display: block;
+        }
+        @keyframes logoGlow {
+            from { filter: drop-shadow(0 0 15px #19C37D) drop-shadow(0 0 30px #1F3A5F); }
+            to { filter: drop-shadow(0 0 25px #19C37D) drop-shadow(0 0 50px #8B5CF6); }
+        }
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            font-size: 1.1rem;
+            padding: 8px 16px;
+            border-radius: 40px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid transparent;
+        }
+        .nav-menu a:hover {
+            border-color: #19C37D;
+            background: rgba(25,195,125,0.1);
+            box-shadow: 0 0 20px #19C37D33;
+        }
+        /* ===== CONTEÚDO PRINCIPAL (SITE) ===== */
+        .main-content {
+            transition: opacity 0.3s ease;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+        section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 10;
+            scroll-margin-top: 100px;
+        }
+        h1, h2, h3 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            line-height: 1.1;
+            background: linear-gradient(to right, #FFFFFF, #19C37D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #FFFFFF, #19C37D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subhead {
+            font-size: 1.25rem;
+            color: #B0B0B0;
+            margin-bottom: 32px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: var(--grad-primary);
+            color: white;
+            box-shadow: 0 0 20px #19C37D, 0 0 40px #1F3A5F;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #19C37D, 0 0 60px #8B5CF6;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            margin-left: 16px;
+            box-shadow: 0 0 15px rgba(25,195,125,0.2);
+        }
+        .btn-outline:hover {
+            border-color: #19C37D;
+            background: rgba(25,195,125,0.1);
+            box-shadow: 0 0 30px #19C37D;
+        }
+        /* ===== HERO COM TYPING ===== */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            min-height: 90vh;
+        }
+        .typing-container {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+        }
+        #typing-text {
+            color: #19C37D;
+            border-right: 3px solid #19C37D;
+            padding-right: 5px;
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        .hero-mockup {
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        .mockup-frame {
+            background: rgba(15, 20, 30, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(25,195,125,0.3);
+            box-shadow: 0 30px 50px -20px #19C37D, 0 0 0 2px rgba(139,92,246,0.2);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mockup-glow {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 30% 50%, rgba(25,195,125,0.3), transparent 70%);
+            filter: blur(40px);
+            z-index: -1;
+        }
+        .mockup-animated {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #1F3A5F, #0E1117);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            gap: 8px;
+        }
+        .mockup-bar {
+            height: 12px;
+            width: 80%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mockup-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(90deg, #19C37D, #1F3A5F);
+            border-radius: 20px;
+            animation: loading 2s infinite alternate;
+        }
+        @keyframes loading {
+            0% { width: 20%; }
+            100% { width: 80%; }
+        }
+        /* ===== NÚMEROS GRANDES ===== */
+        .social-proof {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin: 60px 0;
+            text-align: center;
+        }
+        .social-item {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, #19C37D, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .social-item span {
+            display: block;
+            font-size: 1.2rem;
+            color: #CCC;
+            font-weight: 400;
+            -webkit-text-fill-color: #CCC;
+            background: none;
+        }
+        /* ===== CARDS FLUTUANTES ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .benefit-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 40px 24px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .benefit-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(25,195,125,0.3), 0 0 0 2px rgba(139,92,246,0.3);
+            border-color: #19C37D;
+        }
+        .benefit-card i {
+            font-size: 3.5rem;
+            color: #19C37D;
+            margin-bottom: 20px;
+            transition: transform 0.4s ease;
+        }
+        .benefit-card:hover i {
+            transform: scale(1.1) rotate(2deg);
+        }
+        /* ===== BETA CONTAINER (VALIDAÇÃO) ===== */
+        .beta-container {
+            display: none;
+            min-height: 100vh;
+            background: #0b0f17;
+            position: relative;
+            z-index: 20;
+            padding: 120px 0 60px;
+        }
+        /* Estilos específicos da página de validação */
+        .beta-container .counter {
+            background: rgba(25,195,125,0.1);
+            border: 1px solid rgba(25,195,125,0.3);
+            border-radius: 60px;
+            padding: 12px 24px;
+            display: inline-block;
+            margin-bottom: 30px;
+            backdrop-filter: blur(5px);
+            font-weight: 600;
+            font-size: 1rem;
+            color: #19C37D;
+            box-shadow: 0 0 20px rgba(25,195,125,0.2);
+        }
+        .beta-container .counter i {
+            margin-right: 8px;
+        }
+        .beta-container .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .beta-container .benefit-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px 30px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .beta-container .benefit-card:hover {
+            transform: translateY(-8px);
+            border-color: #19C37D;
+            box-shadow: 0 20px 40px rgba(25,195,125,0.2);
+        }
+        .beta-container .benefit-card i {
+            font-size: 2.5rem;
+            color: #19C37D;
+            margin-bottom: 20px;
+        }
+        .beta-container .audience-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .beta-container .audience-item {
+            background: rgba(25,195,125,0.05);
+            border: 1px solid rgba(25,195,125,0.2);
+            border-radius: 60px;
+            padding: 12px 30px;
+            font-weight: 500;
+            font-size: 1.2rem;
+            backdrop-filter: blur(4px);
+        }
+        .beta-container .steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .beta-container .step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        .beta-container .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--grad-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 30px #19C37D;
+        }
+        .beta-container .form-container {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(25,195,125,0.2);
+            border-radius: 48px;
+            padding: 50px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .beta-container .form-group {
+            margin-bottom: 25px;
+        }
+        .beta-container .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #CCC;
+            font-weight: 500;
+        }
+        .beta-container .form-group input,
+        .beta-container .form-group select {
+            width: 100%;
+            padding: 16px 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 60px;
+            color: white;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        .beta-container .form-group input:focus,
+        .beta-container .form-group select:focus {
+            border-color: #19C37D;
+            outline: none;
+            box-shadow: 0 0 20px #19C37D33;
+        }
+        .beta-container .success-message {
+            text-align: center;
+            padding: 40px;
+            background: rgba(25,195,125,0.1);
+            border-radius: 48px;
+            border: 1px solid #19C37D;
+            margin-top: 40px;
+        }
+        .beta-container .success-message i {
+            font-size: 4rem;
+            color: #19C37D;
+            margin-bottom: 20px;
+        }
+        .beta-container .success-message h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .beta-container .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 60px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 25px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .beta-container .whatsapp-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #25D366;
+        }
+        .beta-container .payment-intent {
+            background: rgba(139,92,246,0.1);
+            border-radius: 32px;
+            padding: 40px;
+            margin-top: 60px;
+            text-align: center;
+        }
+        .beta-container .payment-intent h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .beta-container .payment-intent .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #19C37D;
+            margin: 20px 0;
+        }
+        .beta-container .payment-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .beta-container .payment-buttons button {
+            background: transparent;
+            border: 2px solid #19C37D;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .beta-container .payment-buttons button:hover {
+            background: #19C37D;
+            color: #0b0f17;
+        }
+        .back-to-site {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--grad-primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 0 30px #19C37D;
+            z-index: 100;
+        }
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .btn-outline { margin-left: 0; margin-top: 16px; }
+            .header { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; }
+        }
+        @media (max-width: 600px) {
+            .btn { display: block; width: 100%; margin: 10px 0; }
+            .beta-container .form-container { padding: 30px 20px; }
+        }
+        /* fallback cursor */
+        @media (hover: none) and (pointer: coarse) {
+            * { cursor: auto !important; }
+            #cursor-glow { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div id="cursor-glow"></div>
+    <div id="progress-bar"></div>
+    <canvas id="particles-canvas"></canvas>
+    <div class="floating-words">
+        <span style="top: 15%; left: -10%; animation-duration: 18s;">Engajamento</span>
+        <span style="top: 40%; left: -20%; animation-duration: 25s;">Conversão</span>
+        <span style="top: 70%; left: -5%; animation-duration: 22s;">Crescimento</span>
+        <span style="top: 20%; left: -15%; animation-duration: 30s;">Estratégia</span>
+        <span style="top: 85%; left: -25%; animation-duration: 20s;">Automação</span>
+        <span style="top: 55%; left: -30%; animation-duration: 28s;">VendeIA</span>
+    </div>
+
+    <!-- HEADER (visível apenas no site) -->
+    <header class="header" id="site-header">
+        <div class="logo">
+            <img src="file:///C:/Users/Isaac%20Moreira/Documents/ISAAC/VENDEIA/LOGO_SITE.png" alt="VendeIA" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size:2.5rem; background:linear-gradient(135deg,#fff,#19C37D); -webkit-background-clip:text; -webkit-text-fill-color:transparent;\'>VendeIA</span>'">
+        </div>
+        <nav class="nav-menu">
+            <a href="#hero">Início</a>
+            <a href="#quem-somos">Quem Somos</a>
+            <a href="#contato">Contato</a>
+            <a href="#adquira-ja">Adquira Já</a>
+            <a href="#teste-aqui">Teste Aqui</a>
+            <a href="#planos">Planos</a>
+        </nav>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL DO SITE -->
+    <div class="main-content" id="mainContent">
+        <main>
+            <!-- HERO -->
+            <section id="hero" class="container" style="padding-top: 140px;">
+                <div class="hero">
+                    <div class="hero-content reveal">
+                        <div class="typing-container">
+                            <span>Seu </span>
+                            <span id="typing-text"></span>
+                        </div>
+                        <h1>no automático.<br>Sua venda no máximo.</h1>
+                        <p class="subhead">A IA que cria, publica e otimiza seu marketing enquanto você cuida do seu negócio.</p>
+                        <div>
+                            <a href="#" class="btn btn-primary" id="testarGratisBtn">Testar grátis <i class="fas fa-arrow-right"></i></a>
+                            <a href="#teste-aqui" class="btn btn-outline">Ver como funciona</a>
+                        </div>
+                    </div>
+                    <div class="hero-mockup reveal">
+                        <div class="mockup-glow"></div>
+                        <div class="mockup-frame">
+                            <div class="mockup-animated">
+                                <div class="mockup-bar"></div>
+                                <div class="mockup-line" style="width: 90%;"></div>
+                                <div class="mockup-line" style="width: 70%;"></div>
+                                <div class="mockup-line" style="width: 95%;"></div>
+                                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                    <i class="fas fa-chart-line" style="color: #19C37D; font-size: 2rem;"></i>
+                                    <i class="fas fa-bolt" style="color: #1F3A5F; font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NÚMEROS GRANDES -->
+            <div class="container reveal">
+                <div class="social-proof">
+                    <div class="social-item">+3.421 <span>empreendedores ativos</span></div>
+                    <div class="social-item">+R$ 2.8M <span>movimentados</span></div>
+                    <div class="social-item">98% <span>satisfação</span></div>
+                </div>
+            </div>
+
+            <!-- BENEFÍCIOS -->
+            <section class="container">
+                <h2 class="reveal">Por que microempreendedores escolhem a VendeIA?</h2>
+                <div class="cards-grid">
+                    <div class="benefit-card reveal">
+                        <i class="fas fa-robot"></i>
+                        <h3>IA que aprende</h3>
+                        <p>Nossa inteligência artificial se adapta ao seu negócio e melhora com o tempo.</p>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <i class="fas fa-clock"></i>
+                        <h3>Economia de tempo</h3>
+                        <p>Automatize posts, respostas e análises. Foque no que importa: vender.</p>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Resultados comprovados</h3>
+                        <p>Aumento médio de 37% no engajamento e 22% em conversões.</p>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Segurança de dados</h3>
+                        <p>Seus dados protegidos com criptografia avançada.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DASHBOARD DEMO -->
+            <section class="container">
+                <h2 class="reveal">Veja a VendeIA em ação</h2>
+                <div class="demo-dashboard reveal" style="background:rgba(0,0,0,0.3); border-radius:40px; padding:40px; backdrop-filter:blur(10px);">
+                    <img src="https://via.placeholder.com/800x400/1F3A5F/19C37D?text=DASHBOARD+VENDEIA+IA" alt="Dashboard" style="width:100%; max-width:800px; border-radius:24px;">
+                </div>
+            </section>
+
+            <!-- COMO FUNCIONA -->
+            <section class="container">
+                <h2 class="reveal">Como funciona</h2>
+                <div class="steps reveal">
+                    <div class="step"><div class="step-number">1</div><h3>Conecte seu CNPJ</h3><p>Integre sua empresa em segundos.</p></div>
+                    <div class="step"><div class="step-number">2</div><h3>A IA organiza tudo</h3><p>Analisa mercado e cria estratégias.</p></div>
+                    <div class="step"><div class="step-number">3</div><h3>Receba alertas</h3><p>Acompanhe resultados e otimize.</p></div>
+                </div>
+            </section>
+
+            <!-- DEPOIMENTOS -->
+            <section class="container">
+                <h2 class="reveal">Quem já usa recomenda</h2>
+                <div class="testimonials" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:30px;">
+                    <div class="testimonial-card" style="background:rgba(0,0,0,0.3); padding:30px; border-radius:24px; border-left:4px solid #19C37D;">
+                        <p>"Minha barbearia nunca mais precisou se preocupar com postagem."</p>
+                        <div class="testimonial-author" style="display:flex; gap:15px; margin-top:20px;"><i class="fas fa-user-circle" style="font-size:2rem; color:#19C37D;"></i><div><strong>Carlos Silva</strong><br>Barbearia</div></div>
+                    </div>
+                    <div class="testimonial-card"><p>"Em 3 meses, minhas vendas online dobraram."</p><div class="testimonial-author"><i class="fas fa-user-circle"></i><div><strong>Ana Paula</strong><br>Modas</div></div></div>
+                    <div class="testimonial-card"><p>"Recomendo para qualquer MEI."</p><div class="testimonial-author"><i class="fas fa-user-circle"></i><div><strong>João Mendes</strong><br>Autopeças</div></div></div>
+                </div>
+            </section>
+
+            <!-- PLANOS -->
+            <section id="planos" class="container">
+                <h2 class="reveal">Escolha o plano ideal</h2>
+                <div class="plans-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:30px;">
+                    <div class="plan-card glass-card"><h3>Starter</h3><div class="price">R$ 49</div><p>Para começar</p><a href="#" class="btn-plan">Começar</a></div>
+                    <div class="plan-card glass-card" style="border:2px solid #19C37D;"><h3>Pro</h3><div class="price">R$ 99</div><p>Mais escolhido</p><a href="#" class="btn-plan">Começar</a></div>
+                    <div class="plan-card glass-card"><h3>Turbo</h3><div class="price">R$ 199</div><p>Máximo desempenho</p><a href="#" class="btn-plan">Começar</a></div>
+                </div>
+            </section>
+
+            <!-- CTA FINAL -->
+            <section class="container" style="padding-bottom:120px;">
+                <div class="cta-final" style="text-align:center; background:radial-gradient(circle at 50% 50%, #1F3A5F, #0E1117 80%); border-radius:80px; padding:80px 40px;">
+                    <h2 style="font-size:clamp(2rem,6vw,4rem);">Pare de tentar fazer tudo sozinho.</h2>
+                    <p class="subhead" style="font-size:1.5rem;">Deixe a IA vender por você.</p>
+                    <a href="#" class="btn-cta" style="background:var(--grad-primary); padding:20px 60px; border-radius:60px; font-size:1.5rem; font-weight:700; text-decoration:none; display:inline-block; margin-top:30px; box-shadow:0 0 50px #19C37D;">Começar agora <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- BETA CONTAINER (VALIDAÇÃO) - inicialmente oculto -->
+    <div class="beta-container" id="betaContainer">
+        <div class="container">
+            <!-- Hero da validação -->
+            <div class="counter">
+                <i class="fas fa-users"></i> 127 empreendedores já solicitaram acesso
+            </div>
+            <h1>Sua empresa pode ter um departamento de marketing com IA.</h1>
+            <p class="subhead">Estamos liberando acesso antecipado para microempreendedores que querem vender mais usando inteligência artificial.</p>
+            <a href="#formulario-beta" class="btn btn-primary" style="font-size: 1.3rem; padding: 18px 50px;">Quero acesso antecipado</a>
+
+            <!-- O que você vai receber -->
+            <section>
+                <h2>O que você vai receber</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <i class="fas fa-robot"></i>
+                        <h3>Plano de marketing gerado automaticamente</h3>
+                        <p>Estratégia personalizada para seu negócio, pronta em minutos.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-newspaper"></i>
+                        <h3>Ideias de posts semanais</h3>
+                        <p>Conteúdo relevante para suas redes sociais, com legendas e hashtags.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Estratégia personalizada para seu negócio</h3>
+                        <p>Análise de mercado, melhores horários e tipos de conteúdo.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Para quem é -->
+            <section>
+                <h2>Para quem é</h2>
+                <div class="audience-list">
+                    <span class="audience-item">MEIs</span>
+                    <span class="audience-item">Pequenos negócios locais</span>
+                    <span class="audience-item">Autônomos</span>
+                    <span class="audience-item">Donos de loja física</span>
+                    <span class="audience-item">Prestadores de serviço</span>
+                </div>
+            </section>
+
+            <!-- Como funciona -->
+            <section>
+                <h2>Como funciona</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Você informa seu tipo de negócio</h3>
+                        <p>Cadastre-se em menos de 1 minuto.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>A IA cria sua estratégia</h3>
+                        <p>Analisamos seu mercado e geramos um plano sob medida.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Você recebe tudo pronto para publicar</h3>
+                        <p>Posts, legendas, hashtags e dicas exclusivas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Formulário de captura -->
+            <section id="formulario-beta">
+                <div class="form-container" id="formContainerBeta">
+                    <h2 style="margin-bottom: 20px;">Seja um dos primeiros a usar.</h2>
+                    <p style="margin-bottom: 30px; color: #AAA;">Preencha seus dados e garanta seu acesso antecipado.</p>
+                    <form id="leadFormBeta">
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" id="nomeBeta" placeholder="Seu nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="emailBeta" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de negócio</label>
+                            <input type="text" id="negocioBeta" placeholder="Ex: Barbearia, Padaria, Academia" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cidade</label>
+                            <input type="text" id="cidadeBeta" placeholder="Sua cidade" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Garantir meu acesso</button>
+                    </form>
+                </div>
+
+                <!-- Mensagem de sucesso (inicialmente oculta) -->
+                <div id="successMessageBeta" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Você está na lista prioritária!</h3>
+                    <p>Em breve vamos liberar acesso exclusivo. Fique de olho no seu email.</p>
+                    <a href="#" class="whatsapp-btn" id="whatsappBtnBeta"><i class="fab fa-whatsapp"></i> Quero participar do grupo exclusivo no WhatsApp</a>
+                </div>
+
+                <!-- Intenção de pagamento -->
+                <div class="payment-intent" id="paymentIntentBeta">
+                    <h3>Plano previsto: <span class="price">R$29/mês</span></h3>
+                    <p style="margin-bottom: 30px;">Você pagaria por isso?</p>
+                    <div class="payment-buttons">
+                        <button id="paySimBeta">Sim</button>
+                        <button id="payTalvezBeta">Talvez</button>
+                        <button id="payNaoBeta">Não</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <a href="#" class="back-to-site" id="backToSiteBtn">← Voltar ao site</a>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 VendeIA. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        (function() {
+            // Elementos
+            const mainContent = document.getElementById('mainContent');
+            const betaContainer = document.getElementById('betaContainer');
+            const testarBtn = document.getElementById('testarGratisBtn');
+            const backBtn = document.getElementById('backToSiteBtn');
+
+            // Mostrar beta ao clicar em "Testar grátis"
+            testarBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                mainContent.style.display = 'none';
+                betaContainer.style.display = 'block';
+                window.scrollTo(0, 0);
+            });
+
+            // Voltar ao site
+            backBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                mainContent.style.display = 'block';
+                betaContainer.style.display = 'none';
+                // Resetar formulário e mensagens
+                document.getElementById('leadFormBeta').reset();
+                document.getElementById('formContainerBeta').style.display = 'block';
+                document.getElementById('successMessageBeta').style.display = 'none';
+            });
+
+            // Formulário de lead (beta)
+            const leadFormBeta = document.getElementById('leadFormBeta');
+            const formContainerBeta = document.getElementById('formContainerBeta');
+            const successMessageBeta = document.getElementById('successMessageBeta');
+
+            leadFormBeta.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Simular envio
+                formContainerBeta.style.display = 'none';
+                successMessageBeta.style.display = 'block';
+                // Rolar até a mensagem de sucesso
+                successMessageBeta.scrollIntoView({ behavior: 'smooth' });
+                // Registrar no console (simulação)
+                console.log('Lead capturado (beta):', {
+                    nome: document.getElementById('nomeBeta').value,
+                    email: document.getElementById('emailBeta').value,
+                    negocio: document.getElementById('negocioBeta').value,
+                    cidade: document.getElementById('cidadeBeta').value
+                });
+            });
+
+            // Botão WhatsApp (simulação)
+            document.getElementById('whatsappBtnBeta').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Nosso grupo no WhatsApp será criado em breve. Você será notificado por email.');
+            });
+
+            // Intenção de pagamento
+            document.getElementById('paySimBeta').addEventListener('click', () => alert('Ótimo! Sua opinião foi registrada. (Sim)'));
+            document.getElementById('payTalvezBeta').addEventListener('click', () => alert('Obrigado pelo feedback! (Talvez)'));
+            document.getElementById('payNaoBeta').addEventListener('click', () => alert('Agradecemos a sinceridade. (Não)'));
+
+            // Scroll suave para o formulário
+            document.querySelector('a[href="#formulario-beta"]').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('formulario-beta').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // ===== FUNÇÕES GLOBAIS (cursor, partículas, typing) =====
+            const cursor = document.getElementById('cursor-glow');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+            document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+
+            const progressBar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                progressBar.style.width = (winScroll / height) * 100 + '%';
+            });
+
+            // Partículas
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, particles = [];
+            function initParticles() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                particles = [];
+                for (let i = 0; i < 50; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        size: Math.random() * 3 + 1,
+                        speedX: (Math.random() - 0.5) * 0.3,
+                        speedY: (Math.random() - 0.5) * 0.3,
+                        color: `rgba(25, 195, 125, ${Math.random() * 0.3})`
+                    });
+                }
+            }
+            function animateParticles() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    if (p.x < 0 || p.x > width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > height) p.speedY *= -1;
+                });
+                requestAnimationFrame(animateParticles);
+            }
+            window.addEventListener('resize', initParticles);
+            initParticles();
+            animateParticles();
+
+            // Scroll reveal
+            const reveals = document.querySelectorAll('.reveal');
+            function checkReveal() {
+                reveals.forEach(el => {
+                    const windowHeight = window.innerHeight;
+                    const revealTop = el.getBoundingClientRect().top;
+                    if (revealTop < windowHeight - 150) el.classList.add('active');
+                });
+            }
+            window.addEventListener('scroll', checkReveal);
+            checkReveal();
+
+            // Typing effect
+            const phrases = ["marketing com IA", "contador com IA", "financeiro com IA", "assistente com IA"];
+            let i = 0, j = 0, isDeleting = false;
+            const typingElement = document.getElementById('typing-text');
+            function loop() {
+                if (!typingElement) return;
+                if (!isDeleting && j <= phrases[i].length) {
+                    typingElement.innerHTML = phrases[i].substring(0, j);
+                    j++;
+                }
+                if (isDeleting && j > 0) {
+                    typingElement.innerHTML = phrases[i].substring(0, j-1);
+                    j--;
+                }
+                if (j === phrases[i].length) {
+                    isDeleting = true;
+                    setTimeout(loop, 1500);
+                    return;
+                }
+                if (isDeleting && j === 0) {
+                    isDeleting = false;
+                    i = (i + 1) % phrases.length;
+                }
+                setTimeout(loop, 100);
+            }
+            loop();
+        })();
+    </script>
+</body>
+</html>
