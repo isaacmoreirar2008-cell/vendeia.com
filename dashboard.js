@@ -1,31 +1,155 @@
 // dashboard.js
 
-// Verificar se usuário está logado
+// Recupera dados do usuário
 const userData = localStorage.getItem('vendeiaUser');
 if (!userData) {
     window.location.href = 'auth.html'; // redireciona se não houver
 } else {
     const user = JSON.parse(userData);
 
-    // Preencher dados na tela
+    // Preenche informações fixas (sidebar, cabeçalho)
     document.getElementById('userName').innerText = user.nomeCompleto || 'Usuário';
     document.getElementById('userPlan').innerText = user.plano ? user.plano.charAt(0).toUpperCase() + user.plano.slice(1) : 'Starter';
     document.getElementById('companyName').innerText = user.empresa || '';
-    document.getElementById('infoEmpresa').innerText = user.empresa || '—';
-    document.getElementById('infoNicho').innerText = user.nicho || '—';
-    document.getElementById('infoEmail').innerText = user.email || '—';
 }
+
+// Elemento onde o conteúdo será injetado
+const contentDiv = document.getElementById('dashboardContent');
+
+// Funções de renderização de cada seção
+function renderDashboard() {
+    const user = JSON.parse(localStorage.getItem('vendeiaUser'));
+    contentDiv.innerHTML = `
+        <div class="welcome-card">
+            <h2>Informações da sua conta</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Empresa</span>
+                    <span class="info-value">${user.empresa || '—'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Nicho</span>
+                    <span class="info-value">${user.nicho || '—'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">${user.email || '—'}</span>
+                </div>
+            </div>
+            <a href="#" class="btn-primary dashboard-cta">Começar a usar a IA</a>
+        </div>
+    `;
+}
+
+function renderMarketingIA() {
+    contentDiv.innerHTML = `
+        <div class="welcome-card">
+            <h2>Marketing IA</h2>
+            <p class="subhead">Gerador de conteúdo automático para suas redes sociais.</p>
+            <div style="margin-top:30px;">
+                <div class="form-group">
+                    <label>Ideia de post:</label>
+                    <input type="text" placeholder="Ex: Promoção de fim de semana" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:8px; color:white;">
+                </div>
+                <button class="btn-primary" style="margin-top:15px;">Gerar sugestão</button>
+            </div>
+            <div style="margin-top:30px; background:rgba(25,195,125,0.1); padding:20px; border-radius:16px;">
+                <h3>Exemplo de post gerado:</h3>
+                <p>"🔥 Promoção relâmpago! 20% off em todos os serviços hoje. Agende já!"</p>
+            </div>
+        </div>
+    `;
+}
+
+function renderPromocoes() {
+    contentDiv.innerHTML = `
+        <div class="welcome-card">
+            <h2>Promoções inteligentes</h2>
+            <p class="subhead">Crie promoções personalizadas com base no seu nicho.</p>
+            <div style="margin-top:30px;">
+                <div class="form-group">
+                    <label>Tipo de promoção:</label>
+                    <select style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:8px; color:white;">
+                        <option>Desconto percentual</option>
+                        <option>Leve 2 pague 1</option>
+                        <option>Brinde na compra</option>
+                    </select>
+                </div>
+                <button class="btn-primary" style="margin-top:15px;">Gerar promoção</button>
+            </div>
+        </div>
+    `;
+}
+
+function renderConfiguracoes() {
+    const user = JSON.parse(localStorage.getItem('vendeiaUser'));
+    contentDiv.innerHTML = `
+        <div class="welcome-card">
+            <h2>Configurações da conta</h2>
+            <div style="margin-top:30px;">
+                <div class="form-group">
+                    <label>Nome completo</label>
+                    <input type="text" value="${user.nomeCompleto || ''}" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:8px; color:white;">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="${user.email || ''}" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:8px; color:white;">
+                </div>
+                <div class="form-group">
+                    <label>Empresa</label>
+                    <input type="text" value="${user.empresa || ''}" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:8px; color:white;">
+                </div>
+                <div class="form-group">
+                    <label>Nicho</label>
+                    <input type="text" value="${user.nicho || ''}" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:8px; color:white;">
+                </div>
+                <button class="btn-primary" style="margin-top:15px;">Salvar alterações</button>
+            </div>
+        </div>
+    `;
+}
+
+// Função para alternar abas e atualizar classe active
+function setActiveLink(linkId) {
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById(linkId).classList.add('active');
+}
+
+// Configurar event listeners para os links da sidebar
+document.getElementById('linkDashboard').addEventListener('click', (e) => {
+    e.preventDefault();
+    setActiveLink('linkDashboard');
+    renderDashboard();
+});
+
+document.getElementById('linkMarketing').addEventListener('click', (e) => {
+    e.preventDefault();
+    setActiveLink('linkMarketing');
+    renderMarketingIA();
+});
+
+document.getElementById('linkPromocoes').addEventListener('click', (e) => {
+    e.preventDefault();
+    setActiveLink('linkPromocoes');
+    renderPromocoes();
+});
+
+document.getElementById('linkConfig').addEventListener('click', (e) => {
+    e.preventDefault();
+    setActiveLink('linkConfig');
+    renderConfiguracoes();
+});
 
 // Logout
 document.getElementById('logoutBtn').addEventListener('click', function(e) {
     e.preventDefault();
-    // Remove apenas a sessão (mantém o remember se existir)
-    // Se quiser esquecer completamente, pode remover o remember também
-    // localStorage.removeItem('vendeiaRemember');
     window.location.href = 'auth.html';
 });
 
-// Partículas e cursor (mesmo código do auth.js)
+// Carregar dashboard inicial ao abrir a página
+renderDashboard();
+
+// ===== PARTÍCULAS E CURSOR (mantido do original) =====
 const canvas = document.getElementById('particles-canvas');
 if (canvas) {
     const ctx = canvas.getContext('2d');
