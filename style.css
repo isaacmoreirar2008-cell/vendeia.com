@@ -123,13 +123,13 @@ body {
     height: auto;
     min-height: 70px;
 }
-.logo {
+.logo { file:///C:/Users/Isaac%20Moreira/Documents/ISAAC/VENDEIA/LOGO_SITE.png
     position: relative;
     display: flex;
     align-items: center;
     line-height: 0;
 }
-.logo img {
+.logo img { file:///C:/Users/Isaac%20Moreira/Documents/ISAAC/VENDEIA/LOGO_SITE.png
     height: 70px;
     width: auto;
     filter: drop-shadow(0 0 20px #19C37D) drop-shadow(0 0 40px #1F3A5F);
@@ -1025,3 +1025,4 @@ h2 {
     transform: scale(1.05);
     box-shadow: 0 10px 30px rgba(25,195,125,0.6);
 }
+
