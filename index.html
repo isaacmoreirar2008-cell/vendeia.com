@@ -771,15 +771,52 @@
                 </div>
             </section>
 
-            <!-- PLANOS -->
-            <section id="planos" class="container">
-                <h2 class="reveal">Escolha o plano ideal</h2>
-                <div class="plans-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:30px;">
-                    <div class="plan-card glass-card"><h3>Starter</h3><div class="price">R$ 49</div><p>Para começar</p><a <a href="#" onclick="redirectToCheckout('starter')" class="btn-plan">COMEÇAR</a></div>
-                    <div class="plan-card glass-card" style="border:2px solid #19C37D;"><h3>Pro</h3><div class="price">R$ 99</div><p>Mais escolhido</p><a<a href="#" onclick="redirectToCheckout('pro')" class="btn-plan">COMEÇAR</a>
-                    <div class="plan-card glass-card"><h3>Turbo</h3><div class="price">R$ 199</div><p>Máximo desempenho</p><a<a href="#" onclick="redirectToCheckout('turbo')" class="btn-plan">COMEÇAR</a>
-                </div>
-            </section>
+           <!-- SEÇÃO PLANOS -->
+<section id="planos" class="container">
+    <h2 class="reveal">Escolha o plano ideal para o seu negócio</h2>
+    <div class="plans-container reveal">
+        <!-- Plano Starter -->
+        <div class="plan-card">
+            <img src="assets/planos/plano starter.png" alt="Plano Starter" class="plan-image" onerror="this.src='https://via.placeholder.com/300x200/1F3A5F/19C37D?text=Starter'">
+            <h3>Starter</h3>
+            <div class="price">R$ 49<small>/mês</small></div>
+            <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Marketing básico com IA</li>
+                <li><i class="fas fa-check"></i> 5 posts por semana</li>
+                <li><i class="fas fa-check"></i> Suporte por email</li>
+            </ul>
+            <a href="https://buy.stripe.com/test_9B6aEW1MI1pqfgy1poaMU00" class="btn-plan" target="_blank" rel="noopener">COMEÇAR</a>
+        </div>
+
+        <!-- Plano Pro -->
+        <div class="plan-card featured">
+            <img src="assets/planos/plano pro.png" alt="Plano Pro" class="plan-image" onerror="this.src='https://via.placeholder.com/300x200/1F3A5F/19C37D?text=Pro'">
+            <h3>Pro</h3>
+            <div class="price">R$ 99<small>/mês</small></div>
+            <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Tudo do Starter</li>
+                <li><i class="fas fa-check"></i> Posts ilimitados</li>
+                <li><i class="fas fa-check"></i> Análise de concorrência</li>
+                <li><i class="fas fa-check"></i> Suporte prioritário</li>
+            </ul>
+            <a href="https://buy.stripe.com/test_3cIfZg7721pq9We5FEaMU01" class="btn-plan" target="_blank" rel="noopener">COMEÇAR</a>
+        </div>
+
+        <!-- Plano Turbo -->
+        <div class="plan-card">
+            <img src="assets/planos/plano turbo.png" alt="Plano Turbo" class="plan-image" onerror="this.src='https://via.placeholder.com/300x200/1F3A5F/19C37D?text=Turbo'">
+            <h3>Turbo</h3>
+            <div class="price">R$ 199<small>/mês</small></div>
+            <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Tudo do Pro</li>
+                <li><i class="fas fa-check"></i> Estratégias avançadas</li>
+                <li><i class="fas fa-check"></i> Integração com Instagram</li>
+                <li><i class="fas fa-check"></i> Consultor IA dedicado</li>
+            </ul>
+            <a href="https://buy.stripe.com/test_5kQfZg1MI6JK3xQ0lkaMU02" class="btn-plan" target="_blank" rel="noopener">COMEÇAR</a>
+        </div>
+    </div>
+</section>
 
             <!-- CTA FINAL -->
             <section class="container" style="padding-bottom:120px;">
@@ -1194,5 +1231,6 @@ function redirectToCheckout(plan) {
     window.location.href = links[plan];
 }
       </body> 
+
 
 
